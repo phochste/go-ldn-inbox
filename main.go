@@ -11,11 +11,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/kaptinlin/jsonschema"
 )
 
 var Host string = "localhost"
 var Port int = 3333
 var BaseURL string = "http://localhost:3333"
+var JSONSchema string = ""
 var InboxDir string = "./inbox"
 var InboxPath string = "/inbox/"
 var InboxWritable bool = true
@@ -114,11 +117,16 @@ func doInboxPOST(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 
-	path := storeBody(body)
+	path, err := storeBody(body)
 
-	w.Header().Set("Location", BaseURL+InboxPath+path)
-	w.WriteHeader(http.StatusAccepted)
-	io.WriteString(w, "Accepted "+BaseURL+InboxPath+path)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+	} else {
+		w.Header().Set("Location", BaseURL+InboxPath+path)
+		w.WriteHeader(http.StatusAccepted)
+		io.WriteString(w, "Accepted "+BaseURL+InboxPath+path)
+	}
 }
 
 func doInboxHEAD(w http.ResponseWriter, r *http.Request) {
@@ -201,7 +209,20 @@ func fileExists(filename string) bool {
 	return !os.IsNotExist(err)
 }
 
-func storeBody(body []byte) string {
+func storeBody(body []byte) (string, error) {
+
+	var data map[string]interface{}
+
+	err := json.Unmarshal(body, &data)
+
+	if err != nil {
+		return "", errors.New("Failed to parse JSON")
+	}
+
+	if !validateJSON(data) {
+		return "", errors.New("Not a valid JSON")
+	}
+
 	hash := md5.New()
 	io.WriteString(hash, string(body))
 	id := fmt.Sprintf("%x", hash.Sum(nil))
@@ -210,7 +231,7 @@ func storeBody(body []byte) string {
 
 	os.WriteFile(newPath, body, 0444)
 
-	return id + ".jsonld"
+	return id + ".jsonld", nil
 }
 
 func readMeta(path string) map[string]interface{} {
@@ -231,6 +252,35 @@ func readMeta(path string) map[string]interface{} {
 	return result
 }
 
+func validateJSON(input map[string]interface{}) bool {
+
+	if JSONSchema == "" {
+		return true
+	}
+
+	if !fileExists(JSONSchema) {
+		Logger.Printf("[ERROR] no such file %v\n", JSONSchema)
+		return false
+	}
+
+	file, _ := os.Open(JSONSchema)
+
+	content, _ := io.ReadAll(file)
+
+	compiler := jsonschema.NewCompiler()
+
+	schema, err := compiler.Compile(content)
+
+	if err != nil {
+		Logger.Printf("[ERROR] failed to compile %v\n", JSONSchema)
+		return false
+	}
+
+	result := schema.Validate(input)
+
+	return result.IsValid()
+}
+
 func main() {
 	host := flag.String("host", Host, "Hostname")
 	port := flag.Int("port", Port, "Port")
@@ -238,6 +288,7 @@ func main() {
 	inboxDir := flag.String("inboxDir", InboxDir, "Local path to your inbox")
 	inboxPath := flag.String("inboxPath", InboxPath, "URL path to your inbox")
 	public := flag.Bool("public", InboxPublic, "World readable inbox")
+	schema := flag.String("schema", JSONSchema, "JSON schema to validate input")
 	writable := flag.Bool("writable", InboxWritable, "World appendable inbox")
 
 	flag.Parse()
@@ -247,6 +298,7 @@ func main() {
 	InboxPath = *inboxPath
 	InboxPublic = *public
 	InboxWritable = *writable
+	JSONSchema = *schema
 
 	mux := http.NewServeMux()
 	mux.HandleFunc(InboxPath, doInbox)
