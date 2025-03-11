@@ -234,8 +234,19 @@ func readMeta(path string) map[string]interface{} {
 func main() {
 	host := flag.String("host", Host, "Hostname")
 	port := flag.Int("port", Port, "Port")
+	base := flag.String("base", BaseURL, "Base URL")
+	inboxDir := flag.String("inboxDir", InboxDir, "Local path to your inbox")
+	inboxPath := flag.String("inboxPath", InboxPath, "URL path to your inbox")
+	public := flag.Bool("public", InboxPublic, "World readable inbox")
+	writable := flag.Bool("writable", InboxWritable, "World appendable inbox")
 
 	flag.Parse()
+
+	BaseURL = *base
+	InboxDir = *inboxDir
+	InboxPath = *inboxPath
+	InboxPublic = *public
+	InboxWritable = *writable
 
 	mux := http.NewServeMux()
 	mux.HandleFunc(InboxPath, doInbox)
