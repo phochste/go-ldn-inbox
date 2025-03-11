@@ -31,6 +31,28 @@ touch inbox/.meta
 
 in the `.meta` file store as JSON key value pairs
 
+## Help
+
+```
+Usage of ./go-ldn-inbox:
+  -base string
+        Base URL (default "http://localhost:3333")
+  -host string
+        Hostname (default "localhost")
+  -inboxDir string
+        Local path to your inbox (default "./inbox")
+  -inboxPath string
+        URL path to your inbox (default "/inbox/")
+  -port int
+        Port (default 3333)
+  -public
+        World readable inbox (default true)
+  -schema string
+        JSON schema to validate input
+  -writable
+        World appendable inbox (default true)
+```
+
 ## Author
 
 Patrick Hochstenbach 
