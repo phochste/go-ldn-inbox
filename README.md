@@ -1,6 +1,6 @@
 # go-ldn-inbox
 
-A Go implementation of an [LDN](https://www.w3.org/TR/ldn/) Receiver.
+A Go implementation of an [Linked Data Notifications](https://www.w3.org/TR/ldn/) Sender and Receiver.
 
 ## Build the server
 
@@ -11,7 +11,7 @@ make
 ## Run the server
 
 ```
-ldn-receiver -help
+./ldn-receiver
 ```
 
 The service is now available at http://localhost:3333/inbox/
@@ -19,7 +19,7 @@ The service is now available at http://localhost:3333/inbox/
 ## POST Some Data
 
 ```
-curl -X POST -H 'Content-Type: application/ld+json' --data-binary '@examples/demo.jsonld' http://localhost:3333/inbox/
+./ldn-sender http://localhost:3333/inbox/ ./examples/demo.jsonld
 ```
 ## Optional
 

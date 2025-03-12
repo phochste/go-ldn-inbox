@@ -1,9 +1,12 @@
 .PHONY: clean
 
-all: ldn-receiver
+all: ldn-receiver ldn-sender
 
-ldn-receiver: receiver.go logger.go
-	go build -o ldn-receiver *.go
+ldn-receiver: src/receiver/*.go
+	go build -o ldn-receiver src/receiver/*.go
+
+ldn-sender: src/sender/*.go 
+	go build -o ldn-sender src/sender/*.go
 
 clean:
-	rm ldn-receiver
+	rm ldn-receiver ldn-sender
