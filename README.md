@@ -1,6 +1,6 @@
 # go-ldn-inbox
 
-A Go implementation of an LDN Inbox
+A Go implementation of an [LDN](https://www.w3.org/TR/ldn/) Receiver.
 
 ## Build the server
 
