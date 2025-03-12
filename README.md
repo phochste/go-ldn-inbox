@@ -11,7 +11,7 @@ make
 ## Run the server
 
 ```
-go-ldn-inbox -help
+ldn-receiver -help
 ```
 
 The service is now available at http://localhost:3333/inbox/
@@ -34,7 +34,7 @@ in the `.meta` file store as JSON key value pairs
 ## Help
 
 ```
-Usage of ./go-ldn-inbox:
+Usage of ./ldn-receiver:
   -base string
         Base URL (default "http://localhost:3333")
   -host string

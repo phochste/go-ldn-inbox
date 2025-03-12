@@ -1,2 +1,2 @@
 all: main.go logger.go
-	go build -o go-ldn-inbox *.go
+	go build -o ldn-receiver *.go
