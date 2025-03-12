@@ -16,7 +16,7 @@ make
 
 The service is now available at http://localhost:3333/inbox/
 
-## POST Some Data
+## Send some data
 
 ```
 ./ldn-sender http://localhost:3333/inbox/ ./examples/demo.jsonld
