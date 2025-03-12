@@ -14,7 +14,7 @@ make
 go-ldn-inbox -help
 ```
 
-The service is now available at http://localhost:3333
+The service is now available at http://localhost:3333/inbox/
 
 ## POST Some Data
 
