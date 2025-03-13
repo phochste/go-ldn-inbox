@@ -63,6 +63,12 @@ Usage of ./ldn-receiver:
         World appendable inbox (default true)
 ```
 
+## Install
+
+```
+make install
+```
+
 ## Author
 
 Patrick Hochstenbach 
