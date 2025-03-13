@@ -7,11 +7,13 @@ import (
 	"os"
 )
 
-func main() {
+func main() { os.Exit(mainReturnWithCode()) }
+
+func mainReturnWithCode() int {
 
 	if len(os.Args) < 3 {
 		fmt.Fprintf(os.Stderr, "usage: ldn-sender url file")
-		return
+		return 1
 	}
 
 	postUrl := os.Args[1]
@@ -21,6 +23,7 @@ func main() {
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "no such file "+postFile)
+		return 2
 	}
 
 	// Create a new HTTP request
@@ -28,7 +31,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return 3
 	}
 
 	req.Header.Set("Content-Type", "application/ld+json")
@@ -38,10 +41,12 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return 4
 	}
 	defer resp.Body.Close()
 
 	// Print the response status
 	fmt.Println("Response status:", resp.Status)
+
+	return 0
 }

@@ -281,7 +281,9 @@ func validateJSON(input map[string]interface{}) bool {
 	return result.IsValid()
 }
 
-func main() {
+func main() { os.Exit(mainReturnWithCode()) }
+
+func mainReturnWithCode() int {
 	host := flag.String("host", Host, "Hostname")
 	port := flag.Int("port", Port, "Port")
 	base := flag.String("base", BaseURL, "Base URL")
@@ -311,8 +313,11 @@ func main() {
 
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
+		return 2
 	} else if err != nil {
 		fmt.Printf("error starting server: %s\n", err)
-		os.Exit(1)
+		return 3
+	} else {
+		return 0
 	}
 }

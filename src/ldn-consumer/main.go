@@ -7,10 +7,12 @@ import (
 	"os"
 )
 
-func main() {
+func main() { os.Exit(mainReturnWithCode()) }
+
+func mainReturnWithCode() int {
 	if len(os.Args) < 2 {
 		fmt.Fprintf(os.Stderr, "usage: ldn-consumer url")
-		return
+		return 1
 	}
 
 	url := os.Args[1]
@@ -18,13 +20,13 @@ func main() {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("Error making GET request:", err)
-		os.Exit(1)
+		return 2
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Error: received non-200 status code:", resp.StatusCode)
-		os.Exit(1)
+		return 3
 	}
 
 	var result map[string]interface{}
@@ -33,7 +35,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println("Error decoding JSON response:", err)
-		os.Exit(1)
+		return 4
 	}
 
 	context, exists := result["@context"]
@@ -48,9 +50,11 @@ func main() {
 
 		if err != nil {
 			fmt.Println("Error marshaling to JSON:", err)
-			return
+			return 5
 		}
 
 		fmt.Println(string(jsonData))
 	}
+
+	return 0
 }
