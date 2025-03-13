@@ -2,14 +2,14 @@
 
 all: ldn-receiver ldn-sender ldn-consumer
 
-ldn-receiver: src/receiver/*.go
-	go build -o ldn-receiver src/receiver/*.go
+ldn-receiver: src/ldn-receiver/*.go
+	go build -o ldn-receiver src/ldn-receiver/*.go
 
-ldn-sender: src/sender/*.go 
-	go build -o ldn-sender src/sender/*.go
+ldn-sender: src/ldn-sender/*.go 
+	go build -o ldn-sender src/ldn-sender/*.go
 
-ldn-consumer: src/consumer/*.go
-	go build -o ldn-consumer src/consumer/*.go
+ldn-consumer: src/ldn-consumer/*.go
+	go build -o ldn-consumer src/ldn-consumer/*.go
 
 install:
 	go install ./src/ldn-consumer
