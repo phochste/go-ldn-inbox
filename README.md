@@ -1,3 +1,5 @@
+We moved to https://codeberg.org/phochste/go-ldn-inbox
+
 # go-ldn-inbox
 
 A Go implementation of an [Linked Data Notifications](https://www.w3.org/TR/ldn/) Sender, Consumer and Receiver.
